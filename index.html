@@ -13,31 +13,85 @@
         }
 
         :root {
-            --primary-color: #FF3B30;
-            --secondary-color: #00D084;
-            --dark-color: #1A1A1A;
-            --light-bg: #F8F9FA;
+            /* 深色主题 - 高科技朋克配色 */
+            --primary-color: #00F0FF;
+            --secondary-color: #7000FF;
+            --accent-color: #FF006E;
+            --dark-bg: #0A0E27;
+            --dark-secondary: #141829;
+            --card-bg: rgba(20, 24, 41, 0.6);
             --white: #FFFFFF;
-            --text-primary: #1A1A1A;
-            --text-secondary: #666666;
-            --border-color: #E8E8E8;
+            --text-primary: #FFFFFF;
+            --text-secondary: #B0B8D4;
+            --border-color: rgba(0, 240, 255, 0.2);
+            --gradient-main: linear-gradient(135deg, #00F0FF 0%, #7000FF 100%);
+            --gradient-accent: linear-gradient(135deg, #FF006E 0%, #7000FF 100%);
+            --glow-primary: 0 0 20px rgba(0, 240, 255, 0.5);
+            --glow-secondary: 0 0 20px rgba(112, 0, 255, 0.5);
+        }
+
+        /* 浅色主题 */
+        [data-theme="light"] {
+            --primary-color: #0099FF;
+            --secondary-color: #6200EA;
+            --accent-color: #FF0060;
+            --dark-bg: #F5F7FA;
+            --dark-secondary: #FFFFFF;
+            --card-bg: rgba(255, 255, 255, 0.8);
+            --white: #FFFFFF;
+            --text-primary: #1A1A2E;
+            --text-secondary: #5A5A7A;
+            --border-color: rgba(0, 153, 255, 0.2);
+            --gradient-main: linear-gradient(135deg, #0099FF 0%, #6200EA 100%);
+            --gradient-accent: linear-gradient(135deg, #FF0060 0%, #6200EA 100%);
+            --glow-primary: 0 0 15px rgba(0, 153, 255, 0.3);
+            --glow-secondary: 0 0 15px rgba(98, 0, 234, 0.3);
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-            background: var(--light-bg);
+            background: var(--dark-bg);
             color: var(--text-primary);
             line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 背景动画效果 */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(0, 240, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(112, 0, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(255, 0, 110, 0.04) 0%, transparent 50%);
+            z-index: -1;
+            animation: bgShift 20s ease-in-out infinite;
+        }
+
+        @keyframes bgShift {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.7;
+                transform: scale(1.02);
+            }
         }
 
         /* 导航栏 */
         .navbar {
             position: sticky;
             top: 0;
-            background: var(--white);
+            background: rgba(10, 14, 39, 0.95);
+            backdrop-filter: blur(20px);
             border-bottom: 1px solid var(--border-color);
             z-index: 100;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .navbar-content {
@@ -47,13 +101,17 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            height: 60px;
+            height: 70px;
         }
 
         .navbar-title {
             font-size: 18px;
-            font-weight: 600;
-            color: var(--primary-color);
+            font-weight: 700;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: var(--glow-primary);
         }
 
         .navbar-nav {
@@ -66,11 +124,29 @@
             text-decoration: none;
             color: var(--text-secondary);
             font-size: 14px;
-            transition: color 0.3s;
+            font-weight: 500;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .navbar-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-main);
+            transition: width 0.3s;
         }
 
         .navbar-nav a:hover {
             color: var(--primary-color);
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+        }
+
+        .navbar-nav a:hover::after {
+            width: 100%;
         }
 
         .progress-bar {
@@ -78,9 +154,10 @@
             top: 0;
             left: 0;
             height: 3px;
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            background: var(--gradient-main);
             z-index: 101;
             transition: width 0.2s;
+            box-shadow: var(--glow-primary);
         }
 
         /* 主容器 */
@@ -92,107 +169,251 @@
 
         /* 英雄区 */
         .hero {
-            background: linear-gradient(135deg, var(--dark-color) 0%, #2A2A2A 100%);
-            color: var(--white);
-            padding: 80px 20px;
+            background: radial-gradient(ellipse at center, rgba(10, 14, 39, 0.95) 0%, rgba(10, 14, 39, 1) 100%);
+            padding: 100px 20px;
             text-align: center;
-            margin-bottom: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* 第一层背景光晕 */
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(0, 240, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(112, 0, 255, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(255, 0, 110, 0.08) 0%, transparent 60%);
+            animation: bgPulse 8s ease-in-out infinite;
+            filter: blur(60px);
+        }
+
+        /* 第二层移动光点 */
+        .hero::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background-image:
+                radial-gradient(circle 2px at 20% 30%, rgba(0, 240, 255, 0.4) 0%, transparent 100%),
+                radial-gradient(circle 2px at 60% 70%, rgba(112, 0, 255, 0.4) 0%, transparent 100%),
+                radial-gradient(circle 1px at 50% 50%, rgba(255, 0, 110, 0.3) 0%, transparent 100%),
+                radial-gradient(circle 1.5px at 80% 20%, rgba(0, 240, 255, 0.3) 0%, transparent 100%),
+                radial-gradient(circle 1px at 30% 80%, rgba(112, 0, 255, 0.3) 0%, transparent 100%);
+            animation: float 20s ease-in-out infinite;
+            opacity: 0.6;
+        }
+
+        @keyframes bgPulse {
+            0%, 100% {
+                opacity: 0.8;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 1;
+                transform: scale(1.05);
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            25% {
+                transform: translate(2%, 2%) rotate(90deg);
+            }
+            50% {
+                transform: translate(0, 4%) rotate(180deg);
+            }
+            75% {
+                transform: translate(-2%, 2%) rotate(270deg);
+            }
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* 网格线效果 */
+        .hero-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
         }
 
         .hero h1 {
-            font-size: 48px;
-            font-weight: 700;
+            font-size: 52px;
+            font-weight: 900;
             margin-bottom: 20px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
         }
 
         .hero p {
-            font-size: 18px;
-            opacity: 0.9;
-            margin-bottom: 30px;
+            font-size: 20px;
+            color: var(--text-secondary);
+            margin-bottom: 40px;
+            font-weight: 300;
         }
 
         .hero-stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
         }
 
         .stat-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 20px;
-            border-radius: 8px;
+            background: var(--card-bg);
             backdrop-filter: blur(10px);
+            padding: 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-main);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--glow-primary);
         }
 
         .stat-value {
-            font-size: 32px;
-            font-weight: 700;
-            color: var(--secondary-color);
+            font-size: 42px;
+            font-weight: 900;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
         }
 
         .stat-label {
             font-size: 14px;
-            opacity: 0.8;
-            margin-top: 8px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         /* 章节 */
         .section {
-            margin-bottom: 80px;
+            padding: 80px 20px;
+        }
+
+        .section-alt {
+            background: var(--dark-secondary);
         }
 
         .section-title {
-            font-size: 32px;
-            font-weight: 700;
-            margin-bottom: 40px;
-            padding-bottom: 20px;
-            border-bottom: 3px solid var(--primary-color);
-            display: inline-block;
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 50px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-align: center;
         }
 
-        /* 业务价值卡片 */
-        .value-grid {
+        /* 卡片网格 */
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 30px;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
 
-        .value-card {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 12px;
-            border-left: 4px solid var(--primary-color);
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            transition: transform 0.3s, box-shadow 0.3s;
+        .card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
 
-        .value-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-main);
+            transform: scaleX(0);
+            transition: transform 0.3s;
         }
 
-        .value-card h3 {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 12px;
+        .card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--glow-primary);
+        }
+
+        .card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
             color: var(--primary-color);
         }
 
-        .value-card p {
-            font-size: 14px;
+        .card p {
+            font-size: 15px;
             color: var(--text-secondary);
             line-height: 1.8;
         }
 
         /* 数据对比表 */
         .comparison-table {
-            background: var(--white);
-            border-radius: 12px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
         }
 
         .table-wrapper {
@@ -205,86 +426,112 @@
         }
 
         th {
-            background: var(--dark-color);
+            background: var(--gradient-main);
             color: var(--white);
-            padding: 16px;
+            padding: 20px;
             text-align: left;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
         }
 
         td {
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
+            padding: 18px 20px;
+            border-bottom: 1px solid rgba(0, 240, 255, 0.1);
+            color: var(--text-secondary);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
         }
 
         tr:hover {
-            background: var(--light-bg);
+            background: rgba(0, 240, 255, 0.05);
         }
 
         .improvement {
-            color: var(--secondary-color);
-            font-weight: 600;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
 
         /* 图表容器 */
         .chart-container {
-            background: var(--white);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 40px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
             position: relative;
-            height: 400px;
+            height: 450px;
         }
 
         .chart-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 20px;
-            color: var(--text-primary);
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--primary-color);
         }
 
         /* 案例展示 */
         .case-study {
-            background: var(--white);
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-            margin-bottom: 40px;
-            border-top: 4px solid var(--primary-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 45px;
+            border-radius: 20px;
+            border: 1px solid var(--border-color);
+            margin-bottom: 50px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .case-study::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--gradient-main);
         }
 
         .case-study h3 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 25px;
+            background: var(--gradient-main);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .case-highlights {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-top: 30px;
+            gap: 25px;
+            margin-top: 35px;
         }
 
         .highlight {
-            background: var(--light-bg);
-            padding: 20px;
-            border-radius: 8px;
-            border-left: 3px solid var(--secondary-color);
+            background: rgba(0, 240, 255, 0.05);
+            padding: 25px;
+            border-radius: 12px;
+            border-left: 3px solid var(--primary-color);
+            transition: all 0.3s;
+        }
+
+        .highlight:hover {
+            background: rgba(0, 240, 255, 0.1);
+            box-shadow: var(--glow-primary);
         }
 
         .highlight-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-            color: var(--text-primary);
-        }
-
-        .highlight-value {
-            font-size: 24px;
             font-weight: 700;
-            color: var(--secondary-color);
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 16px;
         }
 
         /* 技术栈 */
@@ -296,21 +543,257 @@
         }
 
         .tech-tag {
-            background: linear-gradient(135deg, var(--primary-color), #FF5A52);
+            background: var(--gradient-main);
             color: var(--white);
-            padding: 8px 16px;
+            padding: 8px 18px;
             border-radius: 20px;
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
+            box-shadow: 0 2px 10px rgba(0, 240, 255, 0.3);
+        }
+
+        /* 技能网格 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .skill-category {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 35px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+        }
+
+        .skill-category h3 {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 10px 0;
+            color: var(--text-secondary);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .skill-category li::before {
+            content: '▹';
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-right: 12px;
+            font-size: 18px;
+        }
+
+        /* 优势卡 */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+
+        .advantage-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--glow-primary);
+        }
+
+        .advantage-icon {
+            font-size: 56px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+        }
+
+        .advantage-card h4 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .advantage-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        /* 评分条 */
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .evaluation-item {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+        }
+
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .evaluation-name {
+            font-weight: 700;
+            color: var(--white);
+            font-size: 16px;
+        }
+
+        .evaluation-stars {
+            color: var(--primary-color);
+            font-size: 18px;
+        }
+
+        .evaluation-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 240, 255, 0.1);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .evaluation-fill {
+            height: 100%;
+            background: var(--gradient-main);
+            box-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
+            transition: width 1s ease-out;
+        }
+
+        /* 支持卡 */
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .support-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 40px 30px;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .support-card:hover {
+            transform: translateY(-8px);
+            box-shadow: var(--glow-primary);
+        }
+
+        .support-icon {
+            font-size: 56px;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 0 10px rgba(0, 240, 255, 0.5));
+        }
+
+        .support-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--white);
+        }
+
+        .support-card p {
+            color: var(--text-secondary);
+            font-size: 15px;
+            line-height: 1.8;
+        }
+
+        .support-outcome {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border-color);
+            font-size: 14px;
+        }
+
+        /* 总结框 */
+        .summary-box {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            padding: 50px;
+            border-radius: 20px;
+            text-align: center;
+            margin-top: 50px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .summary-box::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 240, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .keywords {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .keyword {
+            padding: 12px 28px;
+            background: var(--gradient-main);
+            color: var(--white);
+            font-weight: 700;
+            border-radius: 25px;
+            font-size: 16px;
+            box-shadow: 0 4px 15px rgba(0, 240, 255, 0.4);
         }
 
         /* 底部 */
         .footer {
-            background: var(--dark-color);
+            background: var(--dark-secondary);
             color: var(--white);
-            padding: 40px 20px;
+            padding: 50px 20px;
             text-align: center;
-            margin-top: 80px;
+            margin-top: 100px;
+            border-top: 1px solid var(--border-color);
         }
 
         .footer-content {
@@ -319,19 +802,72 @@
         }
 
         .footer p {
-            opacity: 0.8;
+            color: var(--text-secondary);
             font-size: 14px;
             margin: 10px 0;
+        }
+
+        /* 分享按钮 */
+        .share-btn {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            width: 60px;
+            height: 60px;
+            background: var(--gradient-main);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: var(--glow-primary);
+            transition: all 0.3s;
+            z-index: 50;
+        }
+
+        .share-btn:hover {
+            transform: scale(1.1) rotate(90deg);
+            box-shadow: 0 0 30px rgba(0, 240, 255, 0.7);
+        }
+
+        /* 主题切换按钮 */
+        .theme-toggle {
+            position: fixed;
+            top: 15px;
+            right: 20px;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--border-color);
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            z-index: 1000;
+            transition: all 0.3s;
+            box-shadow: var(--glow-primary);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(0, 240, 255, 0.6);
+        }
+
+        .theme-toggle:active {
+            transform: scale(0.95);
         }
 
         /* 响应式 */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 32px;
+                font-size: 36px;
             }
 
             .section-title {
-                font-size: 24px;
+                font-size: 28px;
             }
 
             .navbar-nav {
@@ -351,95 +887,111 @@
             }
         }
 
-        /* 分享按钮 */
-        .share-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            background: var(--primary-color);
-            color: var(--white);
-            border: none;
-            border-radius: 50%;
-            font-size: 24px;
-            cursor: pointer;
-            box-shadow: 0 4px 16px rgba(255, 59, 48, 0.3);
-            transition: transform 0.3s, box-shadow 0.3s;
-            z-index: 50;
-        }
-
-        .share-btn:hover {
-            transform: scale(1.1);
-            box-shadow: 0 8px 24px rgba(255, 59, 48, 0.4);
-        }
-
-        /* 强调文本 */
         .highlight-text {
             color: var(--primary-color);
-            font-weight: 600;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(0, 240, 255, 0.5);
         }
 
-        .success-text {
-            color: var(--secondary-color);
-            font-weight: 600;
+        /* 粒子画布 */
+        #particles-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
         }
     </style>
 </head>
 <body>
+    <!-- 粒子效果画布 -->
+    <canvas id="particles-canvas"></canvas>
+
     <!-- 进度条 -->
     <div class="progress-bar"></div>
 
     <!-- 导航栏 -->
     <nav class="navbar">
         <div class="navbar-content">
-            <div class="navbar-title">📊 2025 年度技术工作年终报告</div>
+            <div class="navbar-title">⚡ 2025 年度技术工作年终报告</div>
             <ul class="navbar-nav">
-                <li><a href="#business-value">业务价值</a></li>
-                <li><a href="#tech-value">技术价值</a></li>
-                <li><a href="#case-study">核心案例</a></li>
-                <li><a href="#future">未来规划</a></li>
+                <li><a href="#overview">工作概述</a></li>
+                <li><a href="#growth">成长收获</a></li>
+                <li><a href="#evaluation">自我评价</a></li>
+                <li><a href="#future">新年规划</a></li>
+                <li><a href="#support">期待支持</a></li>
             </ul>
         </div>
     </nav>
 
+    <!-- 主题切换按钮 -->
+    <button class="theme-toggle" id="themeToggle" title="切换主题">
+        🌙
+    </button>
+
     <!-- 英雄区 -->
     <div class="hero">
-        <div class="container">
+        <div class="hero-content">
             <h1>2025 年度技术工作年终报告</h1>
             <p>业务价值驱动 × 技术创新落地 × 高质量交付</p>
             <div class="hero-stats">
-                <div class="stat-card">
-                    <div class="stat-value">37.5万</div>
-                    <div class="stat-label">年度成本节约（元）</div>
-                </div>
                 <div class="stat-card">
                     <div class="stat-value">75-87%</div>
                     <div class="stat-label">效率提升幅度</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-value">8个</div>
-                    <div class="stat-label">核心项目贡献</div>
+                    <div class="stat-value">799个</div>
+                    <div class="stat-label">代码贡献(MR)</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-value">98.9%</div>
                     <div class="stat-label">代码质量合并率</div>
                 </div>
+                <div class="stat-card">
+                    <div class="stat-value">30%+</div>
+                    <div class="stat-label">业务量增长</div>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- 业务价值部分 -->
-    <div class="container">
-        <section class="section" id="business-value">
-            <h2 class="section-title">💼 业务价值创造</h2>
+    <!-- 第一部分：工作概述 -->
+    <section class="section" id="overview">
+        <div class="container">
+            <h2 class="section-title">📋 工作概述</h2>
 
-            <!-- 配电箱AI组价案例 -->
+            <!-- 核心数据 -->
+            <div class="grid">
+                <div class="card">
+                    <h3>📈 代码贡献</h3>
+                    <p><span class="highlight-text">799个MR</span> | 5442次提交</p>
+                    <p style="margin-top: 12px; font-size: 12px;">覆盖8个核心项目，全年持续稳定交付</p>
+                </div>
+                <div class="card">
+                    <h3>✅ 代码质量</h3>
+                    <p><span class="highlight-text">98.9%合并率</span></p>
+                    <p style="margin-top: 12px; font-size: 12px;">代码审查通过率高，质量稳定可靠</p>
+                </div>
+                <div class="card">
+                    <h3>🎯 项目分布</h3>
+                    <p><span class="highlight-text">8个核心项目</span></p>
+                    <p style="margin-top: 12px; font-size: 12px;">价格管理、AI组价、BFF层等核心业务</p>
+                </div>
+                <div class="card">
+                    <h3>💼 业务价值</h3>
+                    <p><span class="highlight-text">30%+效率提升</span></p>
+                    <p style="margin-top: 12px; font-size: 12px;">配电箱AI组价系统年度旗舰项目</p>
+                </div>
+            </div>
+
+            <!-- 配电箱AI组价案例 - 突出业务价值 -->
             <div class="case-study">
                 <h3>🏆 配电箱AI组价系统（年度旗舰项目）</h3>
                 <p>从0到1完成配电箱AI组价功能的技术方案设计与实现，成为2025年度最具影响力的项目。</p>
 
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">核心业务指标对比</h4>
+                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 700; color: var(--primary-color);">核心业务指标对比</h4>
                 <div class="comparison-table">
                     <div class="table-wrapper">
                         <table>
@@ -449,7 +1001,7 @@
                                     <th>改进前</th>
                                     <th>改进后</th>
                                     <th>提升幅度</th>
-                                    <th>年度价值</th>
+                                    <th>业务价值</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -486,412 +1038,308 @@
                     </div>
                 </div>
 
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">直接经济效益</h4>
-                <div class="value-grid">
-                    <div class="value-card">
-                        <h3>💰 成本节约</h3>
-                        <p><span class="highlight-text">37.5万元/年</span></p>
-                        <p style="margin-top: 12px; font-size: 12px;">按日均10单 × 年250工作日 × 150元/单计算</p>
+                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 700; color: var(--primary-color);">业务价值体现</h4>
+                <div class="grid">
+                    <div class="card">
+                        <h3>⏱️ 效率飞跃</h3>
+                        <p><span class="highlight-text">75-87%时间节省</span></p>
+                        <p style="margin-top: 12px; font-size: 12px;">从2-4小时缩短至15-30分钟，大幅提升业务处理速度</p>
                     </div>
-                    <div class="value-card">
+                    <div class="card">
                         <h3>📈 业务量增长</h3>
                         <p><span class="highlight-text">30%+</span></p>
                         <p style="margin-top: 12px; font-size: 12px;">商务人员日处理能力从3-4单提升到10-15单</p>
                     </div>
-                    <div class="value-card">
+                    <div class="card">
                         <h3>👥 人力优化</h3>
                         <p><span class="highlight-text">无需增员</span></p>
                         <p style="margin-top: 12px; font-size: 12px;">效率提升支撑业务量增长，无需增加团队规模</p>
                     </div>
                 </div>
+            </div>
 
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">用户体验升级</h4>
-                <div class="case-highlights">
-                    <div class="highlight">
-                        <div class="highlight-title">✅ 实时反馈</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">SSE实时通信展示AI处理进度，消除用户等待焦虑</p>
-                    </div>
-                    <div class="highlight">
-                        <div class="highlight-title">✅ 智能匹配</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">自动匹配产品，减少人工查找时间80%+</p>
-                    </div>
-                    <div class="highlight">
-                        <div class="highlight-title">✅ 灵活编辑</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">支持重新识别、批量添加，满足个性化需求</p>
-                    </div>
-                    <div class="highlight">
-                        <div class="highlight-title">✅ 移动适配</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">响应式设计支持多设备访问</p>
-                    </div>
+            <!-- 项目分布图 -->
+            <div class="chart-container">
+                <div class="chart-title">📊 项目贡献分布（MR数量）</div>
+                <canvas id="projectChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <div class="chart-title">📈 全年MR产出趋势</div>
+                <canvas id="trendChart"></canvas>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第二部分：成长收获 -->
+    <section class="section section-alt" id="growth">
+        <div class="container">
+            <h2 class="section-title">🌱 成长收获</h2>
+
+            <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 700; color: var(--primary-color);">技术能力提升</h3>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>前端开发</h3>
+                    <ul>
+                        <li>Vue.js / iView 组件库熟练应用</li>
+                        <li>Vue 3 + Composition API 深入实践</li>
+                        <li>React 技术栈入门应用</li>
+                        <li>Vite 构建工具掌握</li>
+                        <li>虚拟滚动等性能优化方案</li>
+                    </ul>
                 </div>
-
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">战略价值</h4>
-                <div class="value-grid">
-                    <div class="value-card">
-                        <h3>🎯 AI战略落地</h3>
-                        <p>将公司AI战略转化为实际生产力，成为AI应用的标杆项目</p>
-                    </div>
-                    <div class="value-card">
-                        <h3>🔮 技术储备</h3>
-                        <p>为其他AI应用场景探索提供技术基础和成功案例</p>
-                    </div>
-                    <div class="value-card">
-                        <h3>📊 数据资产</h3>
-                        <p>收集的组价数据成为公司重要数据资产，支撑AI模型优化</p>
-                    </div>
+                <div class="skill-category">
+                    <h3>全栈开发</h3>
+                    <ul>
+                        <li>Node.js / Express BFF 层开发</li>
+                        <li>Java 后端开发尝试</li>
+                        <li>MongoDB 聚合查询优化</li>
+                        <li>数据库性能优化（8-9秒 → 1秒）</li>
+                    </ul>
+                </div>
+                <div class="skill-category">
+                    <h3>工程化能力</h3>
+                    <ul>
+                        <li>Git 版本管理（799 MR，98.9% 合并率）</li>
+                        <li>代码审查（Code Review）能力</li>
+                        <li>技术方案设计（配电箱 AI 组价）</li>
+                        <li>团队协作（跨项目协同）</li>
+                    </ul>
                 </div>
             </div>
 
-            <!-- 价格管理核心模块 -->
-            <div class="case-study" style="margin-top: 40px;">
-                <h3>🎯 价格管理核心模块</h3>
-                <p>ICC业务线核心功能支撑，569个MR贡献，占总工作量71.2%</p>
+            <!-- 技术价值展示 -->
+            <div class="case-study">
+                <h3>🔧 核心技术突破</h3>
 
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">业务贡献统计</h4>
+                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 700; color: var(--primary-color);">技术难点攻克</h4>
                 <div class="comparison-table">
                     <div class="table-wrapper">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>业务指标</th>
-                                    <th>数值</th>
-                                    <th>说明</th>
+                                    <th>技术难点</th>
+                                    <th>解决方案</th>
+                                    <th>技术价值</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr>
-                                    <td><strong>MR贡献数</strong></td>
-                                    <td class="improvement">569个</td>
-                                    <td>占总工作量71.2%，核心项目</td>
+                                    <td><strong>多层级数据展示</strong></td>
+                                    <td>应用状态模式、观察者模式</td>
+                                    <td>建立可复用的设计模式案例</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>代码提交</strong></td>
-                                    <td class="improvement">1329次</td>
-                                    <td>平均每MR2.3次提交，质量稳定</td>
+                                    <td><strong>状态管理混乱</strong></td>
+                                    <td>重构状态管理逻辑，精准触发</td>
+                                    <td>建立最佳实践，减少bug 70%+</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>功能迭代</strong></td>
-                                    <td class="improvement">100+</td>
-                                    <td>持续功能优化和完善</td>
+                                    <td><strong>SSE连接管理</strong></td>
+                                    <td>文件重新导入时切断旧连接</td>
+                                    <td>防止内存泄漏，提升稳定性</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>Bug修复</strong></td>
-                                    <td class="improvement">86个</td>
-                                    <td>稳定性和可靠性保障</td>
+                                    <td><strong>大数据量渲染</strong></td>
+                                    <td>防抖优化（500ms→200ms）</td>
+                                    <td>性能提升60%，用户体验改善</td>
                                 </tr>
                                 <tr>
-                                    <td><strong>性能优化</strong></td>
-                                    <td class="improvement">49个</td>
-                                    <td>用户体验持续提升</td>
+                                    <td><strong>接口并发问题</strong></td>
+                                    <td>引入请求队列管理</td>
+                                    <td>保证操作完整性，避免数据不一致</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>批量操作冲突</strong></td>
+                                    <td>乐观锁 + 悲观锁结合</td>
+                                    <td>保障数据一致性，支持高并发</td>
                                 </tr>
                             </tbody>
                         </table>
                     </div>
                 </div>
 
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">核心功能模块</h4>
+                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 700; color: var(--primary-color);">技术创新亮点</h4>
                 <div class="case-highlights">
                     <div class="highlight">
-                        <div class="highlight-title">💰 价格配置</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">灵活的价格配置系统，支持多维度定价策略</p>
+                        <div class="highlight-title">🔄 SSE实时通信</div>
+                        <p style="font-size: 13px; color: var(--text-secondary);">实时展示AI处理进度，消除用户等待焦虑</p>
                     </div>
                     <div class="highlight">
-                        <div class="highlight-title">📊 数据看板</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">客户询价数据看板，实时展示业务数据</p>
+                        <div class="highlight-title">🎨 设计模式应用</div>
+                        <p style="font-size: 13px; color: var(--text-secondary);">状态模式、观察者模式，提升代码可维护性</p>
                     </div>
                     <div class="highlight">
                         <div class="highlight-title">⚡ 性能优化</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">AI问答数据页面优化：8-9秒→1秒</p>
+                        <p style="font-size: 13px; color: var(--text-secondary);">虚拟滚动、防抖优化，性能提升60%+</p>
                     </div>
                     <div class="highlight">
-                        <div class="highlight-title">🔍 智能搜索</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">智能搜索和推荐功能，提升用户效率</p>
+                        <div class="highlight-title">🚀 前端现代化</div>
+                        <p style="font-size: 13px; color: var(--text-secondary);">Vue 3 + Vite + TypeScript，开发效率提升40%</p>
                     </div>
                 </div>
             </div>
 
-            <!-- 项目分布图 -->
-            <div class="chart-container" style="margin-top: 40px;">
-                <div class="chart-title">📊 项目贡献分布（MR数量）</div>
-                <canvas id="projectChart"></canvas>
-            </div>
-        </section>
-
-        <!-- 技术价值部分 -->
-        <section class="section" id="tech-value">
-            <h2 class="section-title">🔧 技术价值创新</h2>
-
-            <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 600;">核心技术成就</h3>
-            <div class="value-grid">
-                <div class="value-card">
-                    <h3>🎯 SSE实时通信</h3>
-                    <p>实现AI处理进度实时展示，技术方案可复用到其他实时场景</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">Server-Sent Events</span>
-                        <span class="tech-tag">实时推送</span>
-                    </div>
-                </div>
-                <div class="value-card">
-                    <h3>🎨 设计模式应用</h3>
-                    <p>状态模式、观察者模式在AI组价清单中的实际应用，提升代码可维护性</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">状态模式</span>
-                        <span class="tech-tag">观察者模式</span>
-                    </div>
-                </div>
-                <div class="value-card">
-                    <h3>⚡ 性能优化</h3>
-                    <p>虚拟滚动、防抖优化、MongoDB聚合查询，性能提升60%+</p>
-                    <div class="tech-stack">
-                        <span class="tech-tag">虚拟滚动</span>
-                        <span class="tech-tag">MongoDB聚合</span>
-                    </div>
-                </div>
-                <div class="value-card">
-                    <h3>🚀 前端现代化</h3>
-                    <p>Vue 3 + Composition API重构，Vite构建工具升级，开发效率提升40%</p>
+            <!-- 多技术栈能力 -->
+            <div class="grid">
+                <div class="card">
+                    <h3>🎯 前端现代化</h3>
+                    <p>Vue 3 + Composition API重构，Vite构建工具升级</p>
                     <div class="tech-stack">
                         <span class="tech-tag">Vue 3</span>
                         <span class="tech-tag">Vite</span>
                         <span class="tech-tag">TypeScript</span>
                     </div>
                 </div>
-                <div class="value-card">
+                <div class="card">
                     <h3>📦 多技术栈</h3>
-                    <p>Vue.js + React + Node.js + Java，全栈开发能力突破</p>
+                    <p>Vue.js + React + Node.js + Java，全栈开发能力</p>
                     <div class="tech-stack">
                         <span class="tech-tag">Vue.js</span>
                         <span class="tech-tag">React</span>
                         <span class="tech-tag">Node.js</span>
                     </div>
                 </div>
-                <div class="value-card">
+                <div class="card">
                     <h3>🔒 代码质量</h3>
-                    <p>98.9%合并率，20+独立组件，60%+代码复用率，90%+测试覆盖</p>
+                    <p>98.9%合并率，20+独立组件，60%+代码复用率</p>
                     <div class="tech-stack">
                         <span class="tech-tag">高质量代码</span>
                         <span class="tech-tag">模块化设计</span>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- 技术难点攻克 -->
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 20px; font-weight: 600;">技术难点攻克</h3>
-            <div class="comparison-table">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>技术难点</th>
-                                <th>解决方案</th>
-                                <th>技术价值</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>多层级数据展示</strong></td>
-                                <td>应用状态模式、观察者模式</td>
-                                <td>建立可复用的设计模式案例</td>
-                            </tr>
-                            <tr>
-                                <td><strong>状态管理混乱</strong></td>
-                                <td>重构状态管理逻辑，精准触发</td>
-                                <td>建立最佳实践，减少bug 70%+</td>
-                            </tr>
-                            <tr>
-                                <td><strong>SSE连接管理</strong></td>
-                                <td>文件重新导入时切断旧连接</td>
-                                <td>防止内存泄漏，提升稳定性</td>
-                            </tr>
-                            <tr>
-                                <td><strong>大数据量渲染</strong></td>
-                                <td>防抖优化（500ms→200ms）</td>
-                                <td>性能提升60%，用户体验改善</td>
-                            </tr>
-                            <tr>
-                                <td><strong>接口并发问题</strong></td>
-                                <td>引入请求队列管理</td>
-                                <td>保证操作完整性，避免数据不一致</td>
-                            </tr>
-                            <tr>
-                                <td><strong>批量操作冲突</strong></td>
-                                <td>乐观锁 + 悲观锁结合</td>
-                                <td>保障数据一致性，支持高并发</td>
-                            </tr>
-                        </tbody>
-                    </table>
+    <!-- 第三部分：自我评价 -->
+    <section class="section" id="evaluation">
+        <div class="container">
+            <h2 class="section-title">⭐ 自我评价</h2>
+
+            <h3 style="margin-bottom: 20px; font-size: 20px; font-weight: 700; color: var(--primary-color);">核心优势</h3>
+            <div class="advantages-grid">
+                <div class="advantage-card">
+                    <div class="advantage-icon">💎</div>
+                    <h4>代码质量优秀</h4>
+                    <p>98.9% MR 合并率，代码规范性强，全年持续交付</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon">🚀</div>
+                    <h4>高产出能力</h4>
+                    <p>799 个 MR，5442 次提交，覆盖 8 个核心项目</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon">🛠️</div>
+                    <h4>多技术栈能力</h4>
+                    <p>前端 Vue 2/3、React，后端 Node.js、Java</p>
+                </div>
+                <div class="advantage-card">
+                    <div class="advantage-icon">📊</div>
+                    <h4>业务价值贡献</h4>
+                    <p>价格管理系统、AI 组价、BFF 层架构建设</p>
                 </div>
             </div>
 
-            <!-- 季度产出趋势 -->
-            <div class="chart-container" style="margin-top: 40px;">
-                <div class="chart-title">📈 全年MR产出趋势</div>
-                <canvas id="trendChart"></canvas>
-            </div>
-
-            <!-- 技术栈覆盖 -->
-            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 20px; font-weight: 600;">多技术栈能力</h3>
-            <div class="comparison-table">
-                <div class="table-wrapper">
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>技术栈</th>
-                                <th>掌握程度</th>
-                                <th>应用项目</th>
-                                <th>成果</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Vue.js</strong></td>
-                                <td class="improvement">精通</td>
-                                <td>全部项目</td>
-                                <td>799个MR，主技术栈</td>
-                            </tr>
-                            <tr>
-                                <td><strong>React</strong></td>
-                                <td class="improvement">熟练</td>
-                                <td>AI助手、leads-web</td>
-                                <td>三层提示组件</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Node.js</strong></td>
-                                <td class="improvement">熟练</td>
-                                <td>bff</td>
-                                <td>42个MR，BFF层开发</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Java</strong></td>
-                                <td class="improvement">入门</td>
-                                <td>环境搭建</td>
-                                <td>后端开发尝试</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </section>
-
-        <!-- 核心案例部分 -->
-        <section class="section" id="case-study">
-            <h2 class="section-title">📚 核心案例深度解析</h2>
-
-            <div class="case-study">
-                <h3>配电箱AI组价系统 - 完整技术架构</h3>
-                <p style="margin-top: 15px; margin-bottom: 20px;">从0到1完成的AI组价系统，包含文件上传、AI解析、清单编辑、批量操作等完整功能模块。</p>
-
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">项目统计</h4>
-                <div class="value-grid">
-                    <div class="value-card">
-                        <h3>开发周期</h3>
-                        <p><span class="highlight-text">2025年9月-至今</span></p>
-                        <p style="margin-top: 12px; font-size: 12px;">持续优化中</p>
+            <h3 style="margin-top: 40px; margin-bottom: 20px; font-size: 20px; font-weight: 700; color: var(--primary-color);">综合评分</h3>
+            <div class="evaluation-grid">
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">代码质量</span>
+                        <span class="evaluation-stars">★★★★★</span>
                     </div>
-                    <div class="value-card">
-                        <h3>代码贡献</h3>
-                        <p><span class="highlight-text">200+次提交</span></p>
-                        <p style="margin-top: 12px; font-size: 12px;">核心模块开发</p>
-                    </div>
-                    <div class="value-card">
-                        <h3>文档迭代</h3>
-                        <p><span class="highlight-text">6个版本</span></p>
-                        <p style="margin-top: 12px; font-size: 12px;">项目交接文档</p>
-                    </div>
-                    <div class="value-card">
-                        <h3>Jira任务</h3>
-                        <p><span class="highlight-text">30+个</span></p>
-                        <p style="margin-top: 12px; font-size: 12px;">相关工单</p>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 100%"></div>
                     </div>
                 </div>
-
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">核心功能模块</h4>
-                <div class="case-highlights">
-                    <div class="highlight">
-                        <div class="highlight-title">📤 文件上传</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">Excel文件解析、格式验证、错误处理</p>
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">技术深度</span>
+                        <span class="evaluation-stars">★★★★☆</span>
                     </div>
-                    <div class="highlight">
-                        <div class="highlight-title">🤖 AI解析</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">SSE实时推送、进度展示、结果返回</p>
-                    </div>
-                    <div class="highlight">
-                        <div class="highlight-title">📋 清单编辑</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">多Tab展示、展开收起、批量操作</p>
-                    </div>
-                    <div class="highlight">
-                        <div class="highlight-title">🔍 智能搜索</div>
-                        <p style="font-size: 13px; color: var(--text-secondary);">类目搜索、推荐产品、排序筛选</p>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 80%"></div>
                     </div>
                 </div>
-
-                <h4 style="margin-top: 30px; margin-bottom: 20px; font-size: 16px; font-weight: 600;">代码质量指标</h4>
-                <div class="comparison-table">
-                    <div class="table-wrapper">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>质量指标</th>
-                                    <th>数值</th>
-                                    <th>评价</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td><strong>组件化程度</strong></td>
-                                    <td>20+个独立组件</td>
-                                    <td>⭐⭐⭐⭐⭐ 模块化优秀</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>代码复用率</strong></td>
-                                    <td>60%+</td>
-                                    <td>⭐⭐⭐⭐⭐ 复用性高</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>测试覆盖率</strong></td>
-                                    <td>90%+</td>
-                                    <td>⭐⭐⭐⭐ 覆盖充分</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>文档完善度</strong></td>
-                                    <td>README+组件说明+Mock数据</td>
-                                    <td>⭐⭐⭐⭐⭐ 文档齐全</td>
-                                </tr>
-                                <tr>
-                                    <td><strong>代码审查通过率</strong></td>
-                                    <td>100%</td>
-                                    <td>⭐⭐⭐⭐⭐ 质量稳定</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">业务价值</span>
+                        <span class="evaluation-stars">★★★★★</span>
+                    </div>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 100%"></div>
+                    </div>
+                </div>
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">工程化</span>
+                        <span class="evaluation-stars">★★★★☆</span>
+                    </div>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">团队协作</span>
+                        <span class="evaluation-stars">★★★★☆</span>
+                    </div>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 80%"></div>
+                    </div>
+                </div>
+                <div class="evaluation-item">
+                    <div class="evaluation-header">
+                        <span class="evaluation-name">交付效率</span>
+                        <span class="evaluation-stars">★★★★★</span>
+                    </div>
+                    <div class="evaluation-bar">
+                        <div class="evaluation-fill" style="width: 100%"></div>
                     </div>
                 </div>
             </div>
-        </section>
 
-        <!-- 未来规划部分 -->
-        <section class="section" id="future">
-            <h2 class="section-title">🚀 2026年规划与承诺</h2>
+            <div class="summary-box">
+                <h3 style="font-size: 26px; margin-bottom: 20px; color: var(--primary-color);">🎖️ 年度总结词</h3>
+                <div class="keywords">
+                    <span class="keyword">高产</span>
+                    <span class="keyword">稳质</span>
+                    <span class="keyword">全栈</span>
+                    <span class="keyword">AI创新</span>
+                </div>
+                <p style="margin-top: 30px; font-size: 16px; color: var(--text-secondary); position: relative; z-index: 1;">
+                    799个MR · 5442次提交 · 98.9%合并率<br>
+                    8个核心项目 · 75-87%效率提升 · 30%+业务量增长
+                </p>
+            </div>
+        </div>
+    </section>
 
-            <div class="value-grid">
-                <div class="value-card">
-                    <h3>技术深耕</h3>
+    <!-- 第四部分：新年规划 -->
+    <section class="section section-alt" id="future">
+        <div class="container">
+            <h2 class="section-title">🚀 新年规划</h2>
+            <p style="text-align: center; color: var(--text-secondary); font-size: 16px; margin-bottom: 40px;">2026 年技术发展方向与目标</p>
+
+            <div class="grid">
+                <div class="card">
+                    <h3>🔬 技术深耕</h3>
                     <ul style="margin-top: 12px; padding-left: 20px; font-size: 14px; color: var(--text-secondary);">
                         <li>Vue 3生态深入探索</li>
                         <li>TypeScript能力提升</li>
                         <li>前端监控体系建设</li>
                     </ul>
                 </div>
-                <div class="value-card">
-                    <h3>全栈发展</h3>
+                <div class="card">
+                    <h3>🌐 全栈发展</h3>
                     <ul style="margin-top: 12px; padding-left: 20px; font-size: 14px; color: var(--text-secondary);">
                         <li>Node.js后端扩展</li>
                         <li>Java技术能力</li>
                         <li>AI技术应用探索</li>
                     </ul>
                 </div>
-                <div class="value-card">
-                    <h3>工程化提升</h3>
+                <div class="card">
+                    <h3>⚙️ 工程化提升</h3>
                     <ul style="margin-top: 12px; padding-left: 20px; font-size: 14px; color: var(--text-secondary);">
                         <li>组件库建设</li>
                         <li>CI/CD深化</li>
@@ -900,20 +1348,55 @@
                 </div>
             </div>
 
-            <div class="case-study" style="margin-top: 40px;">
-                <h3>年度总结词</h3>
-                <p style="margin-top: 20px; font-size: 18px; font-weight: 600; color: var(--primary-color);">
-                    "高产、稳质、全栈、AI创新"
+            <div class="case-study">
+                <h3>💡 对团队的承诺</h3>
+                <p style="margin-top: 20px; font-size: 16px; line-height: 1.8; color: var(--text-secondary);">
+                    <strong>继续保持高质量交付</strong> · 维持98.9%以上的代码质量<br>
+                    <strong>积极参与技术分享</strong> · 沉淀团队技术资产<br>
+                    <strong>为团队创造更大价值</strong> · 从核心开发者到技术专家<br>
+                    <strong>从个人贡献到团队赋能</strong> · 提升团队整体影响力
                 </p>
-                <ul style="margin-top: 20px; padding-left: 20px; font-size: 14px; color: var(--text-secondary); line-height: 2;">
-                    <li><strong>高产</strong>：799个MR，5442次提交，全年持续交付</li>
-                    <li><strong>稳质</strong>：98.9%合并率，代码质量稳定</li>
-                    <li><strong>全栈</strong>：前端+BFF层，多技术栈覆盖</li>
-                    <li><strong>AI创新</strong>：配电箱AI组价从0到1完整落地</li>
-                </ul>
             </div>
-        </section>
-    </div>
+        </div>
+    </section>
+
+    <!-- 第五部分：期待支持 -->
+    <section class="section" id="support">
+        <div class="container">
+            <h2 class="section-title">🤝 期待支持</h2>
+
+            <div class="support-grid">
+                <div class="support-card">
+                    <div class="support-icon">⏰</div>
+                    <h3>时间支持</h3>
+                    <p><strong>组件库建设</strong></p>
+                    <p>需要每周 10-15% 工作时间投入</p>
+                    <p class="support-outcome">预期产出：可复用组件库完善</p>
+                </div>
+                <div class="support-card">
+                    <div class="support-icon">🎯</div>
+                    <h3>决策支持</h3>
+                    <p><strong>架构设计方案</strong></p>
+                    <p>需要团队评审支持，参与架构设计讨论</p>
+                    <p class="support-outcome">预期产出：完善的技术方案与设计</p>
+                </div>
+                <div class="support-card">
+                    <div class="support-icon">📚</div>
+                    <h3>资源支持</h3>
+                    <p><strong>技术分享平台</strong></p>
+                    <p>需要团队资源支持，组织技术分享会</p>
+                    <p class="support-outcome">预期产出：提升团队影响力与知识沉淀</p>
+                </div>
+                <div class="support-card">
+                    <div class="support-icon">🧑‍🏫</div>
+                    <h3>学习支持</h3>
+                    <p><strong>导师带教机会</strong></p>
+                    <p>需要带教机会与新技术培训支持</p>
+                    <p class="support-outcome">预期产出：扩展技术视野与深度</p>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- 底部 -->
     <footer class="footer">
@@ -921,16 +1404,242 @@
             <p><strong>汇报人</strong>：nana.zheng</p>
             <p><strong>汇报时间</strong>：2026年1月</p>
             <p><strong>数据周期</strong>：2025年全年</p>
-            <p style="margin-top: 20px; opacity: 0.6;">© 2026 nana.zheng. All rights reserved.</p>
+            <p style="margin-top: 20px; font-size: 12px;">© 2026 nana.zheng. All rights reserved.</p>
         </div>
     </footer>
 
     <!-- 分享按钮 -->
-    <button class="share-btn" onclick="shareReport()">📤</button>
+    <button class="share-btn" onclick="shareReport()">⚡</button>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
     <script>
-        // 进度条
+        // ========== 主题切换系统 ==========
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+
+        // 从localStorage加载保存的主题
+        const savedTheme = localStorage.getItem('theme') || 'dark';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+
+        // 主题切换函数
+        function toggleTheme() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+
+            // 重新初始化图表以适配新主题
+            updateChartsTheme();
+        }
+
+        // 更新主题图标
+        function updateThemeIcon(theme) {
+            themeToggle.textContent = theme === 'dark' ? '🌙' : '☀️';
+        }
+
+        // 绑定点击事件
+        themeToggle.addEventListener('click', toggleTheme);
+
+        // 更新图表主题
+        function updateChartsTheme() {
+            const isLight = html.getAttribute('data-theme') === 'light';
+            const textColor = isLight ? '#1A1A2E' : '#B0B8D4';
+            const gridColor = isLight ? 'rgba(0, 153, 255, 0.1)' : 'rgba(0, 240, 255, 0.1)';
+
+            // 更新项目分布图
+            if (window.projectChartInstance) {
+                window.projectChartInstance.options.scales.x.ticks.color = textColor;
+                window.projectChartInstance.options.scales.y.ticks.color = textColor;
+                window.projectChartInstance.options.scales.x.grid.color = gridColor;
+                window.projectChartInstance.update();
+            }
+
+            // 更新趋势图
+            if (window.trendChartInstance) {
+                window.trendChartInstance.options.scales.y.ticks.color = textColor;
+                window.trendChartInstance.options.scales.x.ticks.color = textColor;
+                window.trendChartInstance.options.scales.y.grid.color = gridColor;
+                window.trendChartInstance.options.scales.x.grid.color = gridColor;
+                window.trendChartInstance.options.plugins.legend.labels.color = textColor;
+                window.trendChartInstance.update();
+            }
+        }
+
+        // ========== 粒子效果系统 ==========
+        const canvas = document.getElementById('particles-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let isScrolling = false;
+        let scrollTimeout = null;
+        let animationId = null;
+
+        // 设置画布大小
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // 检测滚动状态
+        let isPageScrolling = false;
+        window.addEventListener('scroll', () => {
+            isPageScrolling = true;
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                isPageScrolling = false;
+            }, 150);
+        });
+
+        // 粒子类
+        class Particle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                // 随机方向和速度
+                const angle = Math.random() * Math.PI * 2;
+                const speed = Math.random() * 2 + 0.5;
+                this.vx = Math.cos(angle) * speed;
+                this.vy = Math.sin(angle) * speed;
+
+                // 粒子属性
+                this.size = Math.random() * 2 + 1;
+                this.life = 1;
+                this.decay = Math.random() * 0.03 + 0.02;
+
+                // 根据当前主题选择颜色
+                const isLight = html.getAttribute('data-theme') === 'light';
+                const colors = isLight
+                    ? ['#0099FF', '#6200EA', '#FF0060']
+                    : ['#00F0FF', '#7000FF', '#FF006E'];
+                this.color = colors[Math.floor(Math.random() * colors.length)];
+                this.glow = Math.random() * 8 + 3;
+            }
+
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+
+                // 减速
+                this.vx *= 0.98;
+                this.vy *= 0.98;
+
+                // 生命衰减
+                this.life -= this.decay;
+                this.size *= 0.97;
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.life;
+
+                // 简化的发光效果，减少性能开销
+                if (this.size > 1.5) {
+                    ctx.shadowBlur = this.glow * 0.5;
+                    ctx.shadowColor = this.color;
+                }
+
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+
+                ctx.restore();
+            }
+
+            isDead() {
+                return this.life <= 0 || this.size < 0.3;
+            }
+        }
+
+        // 创建粒子（带节流）
+        let lastParticleTime = 0;
+        function createParticles(x, y, count = 3) {
+            // 滚动时不创建新粒子
+            if (isPageScrolling) return;
+
+            const now = Date.now();
+            if (now - lastParticleTime < 16) return; // 限制到约60fps
+
+            // 限制粒子数量
+            if (particles.length > 500) {
+                particles = particles.slice(-500);
+            }
+
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle(x, y));
+            }
+            lastParticleTime = now;
+        }
+
+        // 优化的鼠标移动事件（使用 requestAnimationFrame）
+        let pendingMouseUpdate = false;
+        document.addEventListener('mousemove', (e) => {
+            if (!pendingMouseUpdate && !isPageScrolling) {
+                pendingMouseUpdate = true;
+                requestAnimationFrame(() => {
+                    createParticles(e.clientX, e.clientY, 3);
+                    pendingMouseUpdate = false;
+                });
+            }
+        });
+
+        // 触摸设备支持
+        document.addEventListener('touchmove', (e) => {
+            if (!isPageScrolling) {
+                const touch = e.touches[0];
+                createParticles(touch.clientX, touch.clientY, 5);
+            }
+        });
+
+        // 点击事件 - 爆发效果
+        document.addEventListener('click', (e) => {
+            if (!isPageScrolling) {
+                for (let i = 0; i < 20; i++) {
+                    particles.push(new Particle(e.clientX, e.clientY));
+                }
+            }
+        });
+
+        // 优化的动画循环
+        function animate() {
+            // 滚动时只清空画布，不更新粒子
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // 如果在滚动，快速渲染现有粒子，不创建新粒子
+            if (isPageScrolling) {
+                for (let i = 0; i < particles.length; i++) {
+                    const particle = particles[i];
+                    particle.life -= 0.05; // 快速衰减
+                    if (particle.life > 0) {
+                        particle.draw();
+                    }
+                }
+                // 移除死亡粒子
+                particles = particles.filter(p => p.life > 0);
+            } else {
+                // 正常更新和绘制粒子
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    const particle = particles[i];
+                    particle.update();
+                    particle.draw();
+
+                    if (particle.isDead()) {
+                        particles.splice(i, 1);
+                    }
+                }
+            }
+
+            animationId = requestAnimationFrame(animate);
+        }
+
+        // 启动动画
+        animate();
+
+        // ========== 进度条 ==========
         window.addEventListener('scroll', () => {
             const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
             const scrolled = window.scrollY;
@@ -940,7 +1649,7 @@
 
         // 项目分布图
         const projectCtx = document.getElementById('projectChart').getContext('2d');
-        new Chart(projectCtx, {
+        window.projectChartInstance = new Chart(projectCtx, {
             type: 'bar',
             data: {
                 labels: ['price-iview', 'icc-iview', 'price', 'bff', 'bid-cee-web', 'down-ui', 'ai_agent_web', 'leads-web'],
@@ -948,8 +1657,26 @@
                     label: 'MR数量',
                     data: [569, 102, 47, 42, 21, 13, 4, 1],
                     backgroundColor: [
-                        '#FF3B30', '#FF5A52', '#FF7A6F', '#FF9B8D', '#FFB8AC', '#FFD4CC', '#FFE8E3', '#FFF5F3'
+                        'rgba(0, 240, 255, 0.8)',
+                        'rgba(112, 0, 255, 0.8)',
+                        'rgba(0, 240, 255, 0.6)',
+                        'rgba(112, 0, 255, 0.6)',
+                        'rgba(255, 0, 110, 0.8)',
+                        'rgba(0, 240, 255, 0.4)',
+                        'rgba(112, 0, 255, 0.4)',
+                        'rgba(255, 0, 110, 0.6)'
                     ],
+                    borderColor: [
+                        '#00F0FF',
+                        '#7000FF',
+                        '#00F0FF',
+                        '#7000FF',
+                        '#FF006E',
+                        '#00F0FF',
+                        '#7000FF',
+                        '#FF006E'
+                    ],
+                    borderWidth: 2,
                     borderRadius: 8,
                     borderSkipped: false
                 }]
@@ -969,14 +1696,22 @@
                         ticks: {
                             font: {
                                 size: 12
-                            }
+                            },
+                            color: '#B0B8D4'
+                        },
+                        grid: {
+                            color: 'rgba(0, 240, 255, 0.1)'
                         }
                     },
                     y: {
                         ticks: {
                             font: {
                                 size: 12
-                            }
+                            },
+                            color: '#B0B8D4'
+                        },
+                        grid: {
+                            display: false
                         }
                     }
                 }
@@ -985,22 +1720,24 @@
 
         // 趋势图
         const trendCtx = document.getElementById('trendChart').getContext('2d');
-        new Chart(trendCtx, {
+        window.trendChartInstance = new Chart(trendCtx, {
             type: 'line',
             data: {
                 labels: ['1月', '2月', '3月', '4月', '5月', '6月', '7月', '8月', '9月', '10月', '11月', '12月'],
                 datasets: [{
                     label: 'MR数量',
                     data: [53, 58, 87, 82, 43, 85, 95, 46, 52, 75, 67, 56],
-                    borderColor: '#FF3B30',
-                    backgroundColor: 'rgba(255, 59, 48, 0.1)',
+                    borderColor: '#00F0FF',
+                    backgroundColor: 'rgba(0, 240, 255, 0.1)',
                     borderWidth: 3,
                     fill: true,
                     tension: 0.4,
                     pointRadius: 6,
-                    pointBackgroundColor: '#FF3B30',
-                    pointBorderColor: '#FFF',
-                    pointBorderWidth: 2
+                    pointBackgroundColor: '#00F0FF',
+                    pointBorderColor: '#0A0E27',
+                    pointBorderWidth: 2,
+                    pointHoverRadius: 8,
+                    pointHoverBackgroundColor: '#7000FF'
                 }]
             },
             options: {
@@ -1012,7 +1749,8 @@
                         labels: {
                             font: {
                                 size: 12
-                            }
+                            },
+                            color: '#B0B8D4'
                         }
                     }
                 },
@@ -1022,14 +1760,22 @@
                         ticks: {
                             font: {
                                 size: 12
-                            }
+                            },
+                            color: '#B0B8D4'
+                        },
+                        grid: {
+                            color: 'rgba(0, 240, 255, 0.1)'
                         }
                     },
                     x: {
                         ticks: {
                             font: {
                                 size: 12
-                            }
+                            },
+                            color: '#B0B8D4'
+                        },
+                        grid: {
+                            color: 'rgba(0, 240, 255, 0.1)'
                         }
                     }
                 }
