@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2025 年度技术工作年终报告 - nana.zheng</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/recharts@2.10.0/dist/Recharts.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-color: #FF3B30;
+            --dark-color: #1A1A1A;
+            --light-bg: #F2F2F2;
+            --white: #FFFFFF;
+            --text-gray: #333333;
+            --border-gray: #CCCCCC;
+            --light-gray: #EEEEEE;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+                'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+                sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            background: var(--white);
+            color: var(--text-gray);
+            line-height: 1.6;
+        }
+
+        .annual-report {
+            overflow-x: hidden;
+        }
+
+        /* 进度条 */
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), #FF6B5B);
+            z-index: 1000;
+            width: 0;
+            transition: width 0.1s ease;
+        }
+
+        /* 导航栏 */
+        .navbar {
+            position: sticky;
+            top: 0;
+            background: var(--white);
+            border-bottom: 1px solid var(--light-gray);
+            z-index: 999;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .navbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-color);
+            font-size: 1.1rem;
+        }
+
+        .logo-icon {
+            font-size: 1.5rem;
+        }
+
+        .nav-menu {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text-gray);
+            font-weight: 500;
+            transition: color 0.3s ease;
+            cursor: pointer;
+        }
+
+        .nav-menu a:hover {
+            color: var(--primary-color);
+        }
+
+        /* 英雄部分 */
+        .hero {
+            background: linear-gradient(135deg, var(--light-bg) 0%, var(--white) 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .hero-content h1 {
+            font-size: 3rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: #666666;
+            margin-bottom: 3rem;
+        }
+
+        .hero-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .stat-item {
+            padding: 2rem;
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666666;
+            font-weight: 500;
+        }
+
+        /* 容器 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* 章节 */
+        .section {
+            padding: 4rem 2rem;
+            background: var(--white);
+        }
+
+        .section-alt {
+            background: var(--light-bg);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--dark-color);
+            margin-bottom: 3rem;
+            text-align: center;
+            font-weight: 700;
+            position: relative;
+            padding-bottom: 1rem;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: var(--primary-color);
+        }
+
+        .subsection {
+            margin-bottom: 4rem;
+        }
+
+        .subsection h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 2rem;
+            font-weight: 600;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        /* 指标卡 */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(255, 59, 48, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .metric-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .metric-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-name {
+            font-weight: 600;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-desc {
+            font-size: 0.9rem;
+            color: #666666;
+        }
+
+        /* 图表容器 */
+        .chart-container {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            margin: 2rem 0;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chart-canvas {
+            width: 100% !important;
+            height: 400px !important;
+        }
+
+        /* 表格 */
+        .data-table {
+            margin-top: 2rem;
+            overflow-x: auto;
+        }
+
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .data-table th {
+            background: var(--light-bg);
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: var(--dark-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .data-table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .data-table tr:hover {
+            background: var(--light-bg);
+        }
+
+        /* 技能网格 */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .skill-category {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .skill-category h4 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .skill-category ul {
+            list-style: none;
+        }
+
+        .skill-category li {
+            padding: 0.5rem 0;
+            color: #666666;
+            font-size: 0.95rem;
+        }
+
+        .skill-category li::before {
+            content: '✓ ';
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-right: 0.5rem;
+        }
+
+        /* 优势卡 */
+        .advantages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .advantage-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .advantage-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(255, 59, 48, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .advantage-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .advantage-card h4 {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .advantage-card p {
+            color: #666666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        /* 亮点网格 */
+        .highlights-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .highlight-column h4 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .highlight-item {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: var(--light-bg);
+            border-radius: 6px;
+        }
+
+        .highlight-number {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background: var(--primary-color);
+            color: var(--white);
+            border-radius: 50%;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .highlight-content strong {
+            display: block;
+            color: var(--dark-color);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .highlight-content p {
+            font-size: 0.85rem;
+            color: #666666;
+            line-height: 1.4;
+        }
+
+        /* 综合评分 */
+        .evaluation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .evaluation-item {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+        }
+
+        .evaluation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .evaluation-name {
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .evaluation-stars {
+            color: var(--primary-color);
+            font-size: 1.1rem;
+            letter-spacing: 2px;
+        }
+
+        .evaluation-bar {
+            width: 100%;
+            height: 6px;
+            background: var(--light-gray);
+            border-radius: 3px;
+            overflow: hidden;
+        }
+
+        .evaluation-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #FF6B5B);
+        }
+
+        .summary-box {
+            background: var(--light-bg);
+            padding: 2rem;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+            text-align: center;
+        }
+
+        .summary-box h4 {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+        }
+
+        .keywords {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .keyword {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--primary-color);
+            color: var(--primary-color);
+            font-weight: 600;
+            border-radius: 4px;
+            font-size: 0.95rem;
+        }
+
+        /* 规划卡 */
+        .planning-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .planning-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            transition: all 0.3s ease;
+        }
+
+        .planning-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .planning-card h3 {
+            font-size: 1.3rem;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .planning-card ul {
+            list-style: none;
+        }
+
+        .planning-card li {
+            padding: 0.75rem 0;
+            color: #666666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .planning-card strong {
+            color: var(--dark-color);
+            display: block;
+            margin-bottom: 0.25rem;
+        }
+
+        /* 支持卡 */
+        .support-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .support-card {
+            background: var(--white);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid var(--light-gray);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .support-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(255, 59, 48, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .support-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .support-card h3 {
+            font-size: 1.2rem;
+            color: var(--dark-color);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .support-card p {
+            color: #666666;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 0.5rem;
+        }
+
+        .support-outcome {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--light-gray);
+        }
+
+        /* 结束部分 */
+        .section-closing {
+            background: linear-gradient(135deg, var(--dark-color) 0%, #333333 100%);
+            color: var(--white);
+        }
+
+        .closing-content {
+            text-align: center;
+        }
+
+        .closing-content h2 {
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: var(--white);
+        }
+
+        .closing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .closing-item {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 2rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .closing-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .closing-item p {
+            color: #E5E5E5;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .commitment-box {
+            background: rgba(255, 59, 48, 0.1);
+            border: 2px solid var(--primary-color);
+            padding: 2rem;
+            border-radius: 8px;
+            margin-bottom: 2rem;
+        }
+
+        .commitment-box h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .commitment-box p {
+            color: var(--white);
+            font-size: 1rem;
+            line-height: 1.8;
+        }
+
+        .footer-info {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+            font-size: 0.95rem;
+            color: #E5E5E5;
+        }
+
+        /* 页脚 */
+        .footer {
+            background: var(--dark-color);
+            color: #999999;
+            text-align: center;
+            padding: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin: 0.5rem 0;
+        }
+
+        /* 分享按钮 */
+        .share-button {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.5rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.3);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .share-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(255, 59, 48, 0.4);
+        }
+
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .nav-menu {
+                gap: 1rem;
+                font-size: 0.9rem;
+            }
+
+            .navbar-container {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .metrics-grid,
+            .advantages-grid,
+            .planning-grid,
+            .support-grid,
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .closing-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-info {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 1.5rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .hero-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .nav-menu {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+
+            .navbar-container {
+                padding: 1rem;
+            }
+
+            .share-button {
+                bottom: 1rem;
+                right: 1rem;
+                padding: 0.75rem 1rem;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="annual-report">
+        <!-- 进度条 -->
+        <div class="progress-bar" id="progressBar"></div>
+
+        <!-- 导航栏 -->
+        <nav class="navbar">
+            <div class="navbar-container">
+                <div class="navbar-logo">
+                    <span class="logo-icon">📊</span>
+                    <span>2025 年度技术工作总结</span>
+                </div>
+                <ul class="nav-menu">
+                    <li><a href="#overview">工作概述</a></li>
+                    <li><a href="#growth">成长收获</a></li>
+                    <li><a href="#evaluation">自我评价</a></li>
+                    <li><a href="#future">新年规划</a></li>
+                    <li><a href="#support">期待支持</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- 英雄部分 -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>2025 年度技术工作年终报告</h1>
+                <p>总结过去 · 展望未来 | 从数据驱动到价值创造</p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">799</div>
+                        <div class="stat-label">GitLab MR</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">5442</div>
+                        <div class="stat-label">代码提交</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">98.9%</div>
+                        <div class="stat-label">合并率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">核心项目</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 工作概述 -->
+        <section id="overview" class="section">
+            <div class="container">
+                <h2 class="section-title">工作概述</h2>
+                
+                <div class="subsection">
+                    <h3>核心数据一览</h3>
+                    <div class="metrics-grid">
+                        <div class="metric-card">
+                            <div class="metric-icon">📈</div>
+                            <div class="metric-value">799</div>
+                            <div class="metric-name">GitLab MR</div>
+                            <div class="metric-desc">代码合并请求</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">💾</div>
+                            <div class="metric-value">5442</div>
+                            <div class="metric-name">代码提交</div>
+                            <div class="metric-desc">全年累计</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">✅</div>
+                            <div class="metric-value">98.9%</div>
+                            <div class="metric-name">合并率</div>
+                            <div class="metric-desc">代码质量优秀</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-icon">🎯</div>
+                            <div class="metric-value">8</div>
+                            <div class="metric-name">核心项目</div>
+                            <div class="metric-desc">代码贡献</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>项目分布</h3>
+                    <div class="chart-container">
+                        <canvas id="projectChart" class="chart-canvas"></canvas>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>季度分布</h3>
+                    <div class="chart-container">
+                        <canvas id="quarterlyChart" class="chart-canvas"></canvas>
+                    </div>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>季度</th>
+                                    <th>MR 数量</th>
+                                    <th>提交次数</th>
+                                    <th>主要工作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Q1</strong></td>
+                                    <td>198</td>
+                                    <td>1346</td>
+                                    <td>起步期 - 价格系统、ICC 业务功能开发</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Q2</strong></td>
+                                    <td>210</td>
+                                    <td>1428</td>
+                                    <td>稳定期 - 多项目并行开发、功能迭代</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Q3</strong></td>
+                                    <td>193</td>
+                                    <td>1312</td>
+                                    <td>高峰期 - 配电箱 AI 组价核心项目</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Q4</strong></td>
+                                    <td>198</td>
+                                    <td>1356</td>
+                                    <td>持续期 - 持续稳定交付</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 成长收获 -->
+        <section id="growth" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">成长收获</h2>
+                
+                <div class="subsection">
+                    <h3>技术能力提升</h3>
+                    <div class="skills-grid">
+                        <div class="skill-category">
+                            <h4>前端开发</h4>
+                            <ul>
+                                <li>Vue.js / iView 组件库熟练应用</li>
+                                <li>Vue 3 + Composition API 深入实践</li>
+                                <li>React 技术栈入门应用</li>
+                                <li>Vite 构建工具掌握</li>
+                                <li>虚拟滚动等性能优化方案</li>
+                            </ul>
+                        </div>
+                        <div class="skill-category">
+                            <h4>全栈开发</h4>
+                            <ul>
+                                <li>Node.js / Express BFF 层开发</li>
+                                <li>Java 后端开发尝试</li>
+                                <li>MongoDB 聚合查询优化</li>
+                                <li>数据库性能优化（8-9秒 → 1秒）</li>
+                            </ul>
+                        </div>
+                        <div class="skill-category">
+                            <h4>工程化能力</h4>
+                            <ul>
+                                <li>Git 版本管理（799 MR，98.9% 合并率）</li>
+                                <li>代码审查（Code Review）能力</li>
+                                <li>技术方案设计（配电箱 AI 组价）</li>
+                                <li>团队协作（跨项目协同）</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>技术栈掌握</h3>
+                    <div class="data-table">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>技术</th>
+                                    <th>掌握程度</th>
+                                    <th>MR 数量</th>
+                                    <th>用户价值</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td><strong>Vue 2</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">精通</span></td>
+                                    <td>671</td>
+                                    <td>⭐⭐⭐⭐⭐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>JavaScript</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">精通</span></td>
+                                    <td>799</td>
+                                    <td>⭐⭐⭐⭐⭐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Vue 3</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">精通</span></td>
+                                    <td>34</td>
+                                    <td>⭐⭐⭐⭐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Node.js</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">熟练</span></td>
+                                    <td>42</td>
+                                    <td>⭐⭐⭐⭐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>TypeScript</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">熟练</span></td>
+                                    <td>17</td>
+                                    <td>⭐⭐⭐</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>React</strong></td>
+                                    <td><span style="display: inline-block; padding: 0.25rem 0.75rem; background: var(--light-bg); border-left: 3px solid var(--primary-color); border-radius: 4px; font-weight: 500; font-size: 0.9rem;">熟练</span></td>
+                                    <td>4</td>
+                                    <td>⭐⭐⭐</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 自我评价 -->
+        <section id="evaluation" class="section">
+            <div class="container">
+                <h2 class="section-title">自我评价</h2>
+                
+                <div class="subsection">
+                    <h3>核心优势</h3>
+                    <div class="advantages-grid">
+                        <div class="advantage-card">
+                            <div class="advantage-icon">💎</div>
+                            <h4>代码质量优秀</h4>
+                            <p>98.9% MR 合并率，代码规范性强，全年持续交付</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">🚀</div>
+                            <h4>高产出能力</h4>
+                            <p>799 个 MR，5442 次提交，覆盖 8 个核心项目</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">🛠️</div>
+                            <h4>多技术栈能力</h4>
+                            <p>前端 Vue 2/3、React，后端 Node.js、Java</p>
+                        </div>
+                        <div class="advantage-card">
+                            <div class="advantage-icon">📊</div>
+                            <h4>业务价值贡献</h4>
+                            <p>价格管理系统、AI 组价、BFF 层架构建设</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>年度亮点</h3>
+                    <div class="highlights-grid">
+                        <div class="highlight-column">
+                            <h4>Top 3 技术成就</h4>
+                            <div class="highlight-item">
+                                <div class="highlight-number">1</div>
+                                <div class="highlight-content">
+                                    <strong>配电箱 AI 组价完整落地</strong>
+                                    <p>从 0 到 1 完成技术方案设计与实现，SSE 实时推送技术方案</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-number">2</div>
+                                <div class="highlight-content">
+                                    <strong>前端技术栈全面升级</strong>
+                                    <p>Vue 3 + Composition API 重构实践，Vite 构建工具升级</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-number">3</div>
+                                <div class="highlight-content">
+                                    <strong>高产出代码贡献</strong>
+                                    <p>799 个 MR，5442 次提交，覆盖 8 个项目</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="highlight-column">
+                            <h4>Top 3 业务价值</h4>
+                            <div class="highlight-item">
+                                <div class="highlight-number">1</div>
+                                <div class="highlight-content">
+                                    <strong>ICC 业务线核心贡献</strong>
+                                    <p>569 个 MR（price-iview），持续功能迭代</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-number">2</div>
+                                <div class="highlight-content">
+                                    <strong>配电箱 AI 组价支撑</strong>
+                                    <p>102 个 MR（icc-iview），功能优化完善</p>
+                                </div>
+                            </div>
+                            <div class="highlight-item">
+                                <div class="highlight-number">3</div>
+                                <div class="highlight-content">
+                                    <strong>BFF 层服务建设</strong>
+                                    <p>42 个 MR（bff），接口优化</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="subsection">
+                    <h3>综合评分</h3>
+                    <div class="evaluation-grid">
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">代码质量</span>
+                                <span class="evaluation-stars">★★★★★</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">技术深度</span>
+                                <span class="evaluation-stars">★★★★☆</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">业务价值</span>
+                                <span class="evaluation-stars">★★★★★</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">工程化</span>
+                                <span class="evaluation-stars">★★★★☆</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">团队协作</span>
+                                <span class="evaluation-stars">★★★★☆</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                        <div class="evaluation-item">
+                            <div class="evaluation-header">
+                                <span class="evaluation-name">交付效率</span>
+                                <span class="evaluation-stars">★★★★★</span>
+                            </div>
+                            <div class="evaluation-bar">
+                                <div class="evaluation-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="summary-box">
+                        <h4>年度总结词</h4>
+                        <div class="keywords">
+                            <span class="keyword">高产</span>
+                            <span class="keyword">稳质</span>
+                            <span class="keyword">全栈</span>
+                            <span class="keyword">AI 创新</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 新年规划 -->
+        <section id="future" class="section section-alt">
+            <div class="container">
+                <h2 class="section-title">新年规划</h2>
+                <p style="text-align: center; color: #666666; font-size: 1.1rem; margin-bottom: 2rem;">2026 年技术发展方向与目标</p>
+                
+                <div class="planning-grid">
+                    <div class="planning-card">
+                        <h3>技术深耕</h3>
+                        <ul>
+                            <li><strong>Vue 3 生态深入</strong> - 新特性学习、性能优化、组件库建设</li>
+                            <li><strong>TypeScript 能力提升</strong> - 类型系统深入、泛型编程实践</li>
+                            <li><strong>前端监控体系</strong> - 性能监控、错误追踪、用户行为分析</li>
+                        </ul>
+                    </div>
+                    <div class="planning-card">
+                        <h3>全栈发展</h3>
+                        <ul>
+                            <li><strong>Node.js 后端扩展</strong> - BFF 层架构、微服务实践</li>
+                            <li><strong>Java 技术能力</strong> - 后端开发深入、Spring 框架掌握</li>
+                            <li><strong>AI 技术应用</strong> - AI 组件库、大模型应用</li>
+                        </ul>
+                    </div>
+                    <div class="planning-card">
+                        <h3>工程化提升</h3>
+                        <ul>
+                            <li><strong>组件库建设</strong> - 可复用组件、文档体系、Storybook</li>
+                            <li><strong>CI/CD 深化</strong> - 自动化测试、持续集成优化</li>
+                            <li><strong>测试覆盖</strong> - 单元测试、集成测试、E2E 测试</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 期待支持 -->
+        <section id="support" class="section">
+            <div class="container">
+                <h2 class="section-title">期待支持</h2>
+                
+                <div class="support-grid">
+                    <div class="support-card">
+                        <div class="support-icon">⏰</div>
+                        <h3>时间支持</h3>
+                        <p><strong>组件库建设</strong></p>
+                        <p>需要每周 10-15% 工作时间投入</p>
+                        <p class="support-outcome">预期产出：可复用组件库完善</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">🎯</div>
+                        <h3>决策支持</h3>
+                        <p><strong>架构设计方案</strong></p>
+                        <p>需要团队评审支持，参与架构设计讨论</p>
+                        <p class="support-outcome">预期产出：完善的技术方案与设计</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">📚</div>
+                        <h3>资源支持</h3>
+                        <p><strong>技术分享平台</strong></p>
+                        <p>需要团队资源支持，组织技术分享会</p>
+                        <p class="support-outcome">预期产出：提升团队影响力与知识沉淀</p>
+                    </div>
+                    <div class="support-card">
+                        <div class="support-icon">🧑‍🏫</div>
+                        <h3>学习支持</h3>
+                        <p><strong>导师带教机会</strong></p>
+                        <p>需要带教机会与新技术培训支持</p>
+                        <p class="support-outcome">预期产出：扩展技术视野与深度</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 总结 -->
+        <section class="section section-closing">
+            <div class="container">
+                <div class="closing-content">
+                    <h2>总结与承诺</h2>
+                    <div class="closing-grid">
+                        <div class="closing-item">
+                            <h3>2025 年成就</h3>
+                            <p>799 个 MR · 5442 次提交 · 98.9% 合并率</p>
+                            <p>8 个项目 · 12 个月全年活跃</p>
+                            <p>配电箱 AI 组价完整落地</p>
+                        </div>
+                        <div class="closing-item">
+                            <h3>2026 年目标</h3>
+                            <p>技术深耕 · 工程化提升 · 影响力提升</p>
+                            <p>从核心开发者到技术专家</p>
+                            <p>从个人贡献到团队赋能</p>
+                        </div>
+                    </div>
+                    <div class="commitment-box">
+                        <h3>对团队的承诺</h3>
+                        <p>继续保持高质量交付 · 积极参与技术分享 · 为团队创造更大价值</p>
+                    </div>
+                    <div class="footer-info">
+                        <div><strong>汇报人：</strong> nana.zheng</div>
+                        <div><strong>汇报时间：</strong> 2026 年 1 月</div>
+                        <div><strong>数据周期：</strong> 2025 年全年</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2026 nana.zheng. All rights reserved.</p>
+            <p>2025 年度技术工作年终报告 | 可分享的成就展示</p>
+        </footer>
+    </div>
+
+    <!-- 分享按钮 -->
+    <button class="share-button" id="shareBtn" title="分享此报告">📤 分享</button>
+
+    <script>
+        // 进度条
+        window.addEventListener('scroll', () => {
+            const scrollTop = window.scrollY;
+            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+            const scrolled = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // 项目分布图表
+        const projectCtx = document.getElementById('projectChart').getContext('2d');
+        new Chart(projectCtx, {
+            type: 'bar',
+            data: {
+                labels: ['price-iview', 'icc-iview', 'price', 'bff', 'bid-cee-web', 'down-ui', 'ai_agent_web', 'leads-web'],
+                datasets: [{
+                    label: 'MR 数量',
+                    data: [569, 102, 47, 42, 21, 13, 4, 1],
+                    backgroundColor: [
+                        '#FF3B30', '#FF6B5B', '#FF8C7F', '#FFB3A8',
+                        '#FFCCC4', '#FFE0DB', '#FFF0ED', '#F2F2F2'
+                    ],
+                    borderRadius: 4
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { beginAtZero: true, max: 600 }
+                }
+            }
+        });
+
+        // 季度分布图表
+        const quarterlyCtx = document.getElementById('quarterlyChart').getContext('2d');
+        new Chart(quarterlyCtx, {
+            type: 'line',
+            data: {
+                labels: ['Q1', 'Q2', 'Q3', 'Q4'],
+                datasets: [
+                    {
+                        label: 'MR 数量',
+                        data: [198, 210, 193, 198],
+                        borderColor: '#FF3B30',
+                        backgroundColor: 'rgba(255, 59, 48, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    },
+                    {
+                        label: '提交次数',
+                        data: [1346, 1428, 1312, 1356],
+                        borderColor: '#333333',
+                        backgroundColor: 'rgba(51, 51, 51, 0.1)',
+                        tension: 0.4,
+                        fill: true
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: true, position: 'top' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // 分享功能
+        document.getElementById('shareBtn').addEventListener('click', () => {
+            const url = window.location.href;
+            const title = '2025 年度技术工作年终报告';
+            const text = '查看我的 2025 年度技术工作成就：799 个 MR、5442 次提交、98.9% 合并率';
+
+            if (navigator.share) {
+                navigator.share({
+                    title: title,
+                    text: text,
+                    url: url
+                }).catch(err => console.log('分享失败:', err));
+            } else {
+                // 备选方案：复制链接到剪贴板
+                navigator.clipboard.writeText(url).then(() => {
+                    alert('链接已复制到剪贴板！');
+                }).catch(err => {
+                    alert('分享链接：' + url);
+                });
+            }
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
